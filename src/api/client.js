@@ -3,7 +3,6 @@
 export const api = {
   test: () => http.get('/test'),
   
-  // Products
   getProducts: (params) => http.get('/products', { params }),
   getProduct: (id) => http.get(`/products/${id}`),
   searchProducts: (query) => http.get('/products/search', { params: { query } }),
