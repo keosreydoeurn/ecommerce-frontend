@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Checkout Test</title>
+    <style>
+        body { background: #1A1A2E; color: #fff; font-family: Arial; padding: 40px; }
+        .container { max-width: 500px; margin: 0 auto; background: rgba(255,255,255,0.05); padding: 30px; border-radius: 10px; }
+        input, select { display: block; width: 100%; padding: 10px; margin: 10px 0; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 5px; }
+        button { width: 100%; padding: 12px; background: #FFD700; color: #1A1A2E; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin: 5px 0; }
+        .btn-login { background: #51cf66; }
+        .btn-cart { background: #4dabf7; }
+        .btn-checkout { background: #FFD700; }
+        .info { color: #aaa; font-size: 12px; margin-top: 5px; }
+        .success { color: #51cf66; margin-top: 10px; }
+        .error { color: #ff6b6b; margin-top: 10px; }
+        hr { border-color: rgba(255,255,255,0.1); margin: 20px 0; }
+        h3 { color: #FFD700; }
+        .step { margin: 20px 0; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🧪 Checkout Test</h2>
+        
+        <div class="step">
+            <h3>Step 1: Login</h3>
+            <input type="text" id="email" value="admin@example.com" placeholder="Email" />
+            <input type="password" id="password" value="password" placeholder="Password" />
+            <button class="btn-login" onclick="login()">Login</button>
+            <div id="loginResult" class="info"></div>
+        </div>
+
+        <hr>
+
+        <div class="step">
+            <h3>Step 2: Add to Cart</h3>
+            <input type="number" id="productId" value="1" placeholder="Product ID" />
+            <input type="number" id="quantity" value="2" placeholder="Quantity" />
+            <button class="btn-cart" onclick="addToCart()">Add to Cart</button>
+            <div id="cartResult" class="info"></div>
+        </div>
+
+        <hr>
+
+        <div class="step">
+            <h3>Step 3: Checkout</h3>
+            <input type="text" id="address" value="123 Main Street" placeholder="Address" />
+            <input type="text" id="city" value="New York" placeholder="City" />
+            <input type="text" id="phone" value="1234567890" placeholder="Phone" />
+            <select id="payment">
+                <option value="credit_card">Credit Card</option>
+                <option value="paypal">PayPal</option>
+                <option value="cash_on_delivery">Cash on Delivery</option>
+            </select>
+            <button class="btn-checkout" onclick="checkout()">Place Order</button>
+            <div id="checkoutResult" class="info"></div>
+            <div id="errorResult" class="error"></div>
+            <div id="successResult" class="success"></div>
+        </div>
+    </div>
+
+    <script>
+        let token = '';
+
+        function cleanResponse(text) {
+            return text.replace(/^\uFEFF/, '').replace(/^\uFFFE/, '').replace(/^ï»¿/, '').trim();
+        }
+
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            document.getElementById('loginResult').textContent = 'Logging in...';
+            
+            try {
+                const res = await fetch('http://localhost:8000/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const text = await res.text();
+                const clean = cleanResponse(text);
+                const data = JSON.parse(clean);
+                
+                if (data.token) {
+                    token = data.token;
+                    document.getElementById('loginResult').textContent = '✅ Login successful!';
+                    document.getElementById('loginResult').style.color = '#51cf66';
+                } else {
+                    document.getElementById('loginResult').textContent = '❌ Login failed: ' + JSON.stringify(data);
+                    document.getElementById('loginResult').style.color = '#ff6b6b';
+                }
+            } catch (err) {
+                document.getElementById('loginResult').textContent = '❌ Error: ' + err.message;
+                document.getElementById('loginResult').style.color = '#ff6b6b';
+            }
+        }
+
+        async function addToCart() {
+            if (!token) {
+                document.getElementById('cartResult').textContent = '❌ Please login first!';
+                document.getElementById('cartResult').style.color = '#ff6b6b';
+                return;
+            }
+            
+            const productId = document.getElementById('productId').value;
+            const quantity = document.getElementById('quantity').value;
+            
+            document.getElementById('cartResult').textContent = 'Adding to cart...';
+            
+            try {
+                const res = await fetch('http://localhost:8000/api/cart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({ product_id: parseInt(productId), quantity: parseInt(quantity) })
+                });
+                const text = await res.text();
+                const clean = cleanResponse(text);
+                const data = JSON.parse(clean);
+                document.getElementById('cartResult').textContent = '✅ ' + (data.message || 'Added to cart!');
+                document.getElementById('cartResult').style.color = '#51cf66';
+            } catch (err) {
+                document.getElementById('cartResult').textContent = '❌ Error: ' + err.message;
+                document.getElementById('cartResult').style.color = '#ff6b6b';
+            }
+        }
+
+        async function checkout() {
+            if (!token) {
+                document.getElementById('errorResult').textContent = '❌ Please login first!';
+                return;
+            }
+            
+            const address = document.getElementById('address').value;
+            const city = document.getElementById('city').value;
+            const phone = document.getElementById('phone').value;
+            const payment = document.getElementById('payment').value;
+            
+            if (!address || !city || !phone || !payment) {
+                document.getElementById('errorResult').textContent = '❌ Please fill all fields!';
+                return;
+            }
+            
+            const fullAddress = address + ', ' + city + ', Phone: ' + phone;
+            
+            document.getElementById('checkoutResult').textContent = 'Placing order...';
+            document.getElementById('errorResult').textContent = '';
+            document.getElementById('successResult').textContent = '';
+            
+            try {
+                const res = await fetch('http://localhost:8000/api/checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        shipping_address: fullAddress,
+                        payment_method: payment
+                    })
+                });
+                const text = await res.text();
+                const clean = cleanResponse(text);
+                const data = JSON.parse(clean);
+                
+                if (res.ok && data.success) {
+                    document.getElementById('successResult').textContent = '✅ Order placed! Order ID: ' + (data.data?.id || '');
+                    document.getElementById('successResult').style.color = '#51cf66';
+                    document.getElementById('checkoutResult').textContent = '';
+                } else {
+                    document.getElementById('errorResult').textContent = '❌ Error: ' + (data.message || JSON.stringify(data));
+                    document.getElementById('errorResult').style.color = '#ff6b6b';
+                    document.getElementById('checkoutResult').textContent = '';
+                }
+            } catch (err) {
+                document.getElementById('errorResult').textContent = '❌ Error: ' + err.message;
+                document.getElementById('errorResult').style.color = '#ff6b6b';
+                document.getElementById('checkoutResult').textContent = '';
+            }
+        }
+    </script>
+</body>
+</html>
