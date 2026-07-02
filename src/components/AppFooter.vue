@@ -13,19 +13,19 @@
           </div>
           <p class="footer-desc">Your premium destination for quality products at unbeatable prices. Shop with confidence and experience the best online shopping.</p>
           <div class="footer-social">
-            <a href="#" class="social-link facebook" title="Facebook">
+            <a href="https://www.facebook.com/keo.yerar" class="social-link facebook" title="Facebook">
               <i class="fab fa-facebook-f"></i>
             </a>
-            <a href="#" class="social-link instagram" title="Instagram">
+            <a href="https://www.instagram.com/ye__rar/" class="social-link instagram" title="Instagram">
               <i class="fab fa-instagram"></i>
             </a>
             <a href="#" class="social-link twitter" title="Twitter">
               <i class="fab fa-twitter"></i>
             </a>
-            <a href="#" class="social-link youtube" title="YouTube">
+            <a href="https://www.youtube.com/@keoyerar5511" class="social-link youtube" title="YouTube">
               <i class="fab fa-youtube"></i>
             </a>
-            <a href="#" class="social-link linkedin" title="LinkedIn">
+            <a href="https://www.linkedin.com/in/keo-sreydoeurn14/" class="social-link linkedin" title="LinkedIn">
               <i class="fab fa-linkedin-in"></i>
             </a>
           </div>
@@ -72,19 +72,19 @@
             <div class="contact-icon">
               <i class="fas fa-envelope"></i>
             </div>
-            <span>info@eshop.com</span>
+            <span>eshop@yerar.com</span>
           </div>
           <div class="contact-item">
             <div class="contact-icon">
               <i class="fas fa-phone-alt"></i>
             </div>
-            <span>+1 (234) 567-890</span>
+            <span>+855 882 348 363</span>
           </div>
           <div class="contact-item">
             <div class="contact-icon">
               <i class="fas fa-map-marker-alt"></i>
             </div>
-            <span>123 Main Street, City</span>
+            <span>371 Street, Phnom Penh</span>
           </div>
           <div class="contact-item">
             <div class="contact-icon">

@@ -73,18 +73,7 @@
                   <i class="fas fa-user-circle item-icon"></i> 
                   <span>My Profile</span>
                 </router-link>
-                <router-link to="/orders" class="dropdown-item" @click="closeDropdown">
-                  <i class="fas fa-clipboard-list item-icon"></i> 
-                  <span>My Orders</span>
-                </router-link>
-                <router-link to="/wishlist" class="dropdown-item" @click="closeDropdown">
-                  <i class="fas fa-heart item-icon"></i> 
-                  <span>Wishlist</span>
-                </router-link>
-                <router-link to="/cart" class="dropdown-item" @click="closeDropdown">
-                  <i class="fas fa-shopping-cart item-icon"></i> 
-                  <span>Cart</span>
-                </router-link>
+                
                 <div class="dropdown-divider"></div>
                 <button class="dropdown-item logout" @click="handleLogout">
                   <i class="fas fa-sign-out-alt item-icon"></i> 
